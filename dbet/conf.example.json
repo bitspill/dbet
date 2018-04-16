@@ -1,0 +1,15 @@
+{
+  "databaseConfiguration": {
+    "user": "user",
+    "password": "pass",
+    "net": "tcp",
+    "address": "localhost:3306",
+    "name": "publicdb"
+  },
+  "floConfiguration": {
+    "floAddress": "publisherAddress",
+    "rpcAddress": "localhost:7313",
+    "rpcUser": "rpcUser",
+    "rpcPass": "rpcPass"
+  }
+}
