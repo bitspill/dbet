@@ -42,6 +42,7 @@ func saveIpfsHashes() error {
 }
 
 func ipfsPinPath(path string, name string) (string, error) {
+	fmt.Println("Pinning " + name)
 	bin := "ipfs"
 	args := []string{"add", "-r", "-p=false", "--nocopy", path}
 
@@ -53,12 +54,14 @@ func ipfsPinPath(path string, name string) (string, error) {
 	}
 
 	lines := strings.Split(string(out), "\n")
-	last := lines[len(lines)-1]
+	last := lines[len(lines)-2]
 	words := strings.Split(last, " ")
 
 	if words[0] == "added" && words[2] == name {
+		fmt.Println("Pinned. " + words[1])
 		return words[1], nil
 	} else {
+		fmt.Println(words)
 		return string(out), errors.New("ipfs hash not found")
 	}
 }
