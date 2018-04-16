@@ -65,6 +65,7 @@ type tiltSeriesRow struct {
 	TomoDate            mysql.NullTime  `db:"tomo_date"`
 	TsdTXTNotes         sql.NullString  `db:"tsd_TXT_notes"`
 	Scope               sql.NullString  `db:"scope"`
+	Roles               sql.NullString  `db:"roles"`
 	ScdTXTNotes         sql.NullString  `db:"scd_TXT_notes"`
 	SpeciesName         sql.NullString  `db:"SpeciesName"`
 	SpdTXTNotes         sql.NullString  `db:"spd_TXT_notes"`
@@ -126,6 +127,9 @@ func GetTiltSeriesById(tiltSeriesId string) (ts TiltSeries, err error) {
 	}
 	if tsr.Scope.Valid {
 		ts.ScopeName = tsr.Scope.String
+	}
+	if tsr.Roles.Valid {
+		ts.Roles = tsr.Roles.String
 	}
 	if tsr.ScdTXTNotes.Valid {
 		ts.ScopeNotes = tsr.ScdTXTNotes.String

@@ -5,6 +5,7 @@ SELECT
   tsd.tomo_date,
   tsd.TXT_notes as tsd_TXT_notes,
   tsd.scope,
+  tsd.roles,
   tsd.keyimg,
   tsd.keymov,
   scd.TXT_notes as scd_TXT_notes,

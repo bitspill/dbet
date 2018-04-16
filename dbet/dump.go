@@ -8,6 +8,7 @@ import (
 	"time"
 	"strconv"
 	"os"
+	"os/exec"
 )
 
 type OipArtifact struct {
@@ -32,12 +33,6 @@ func main() {
 			continue
 		}
 
-		s, err := ipfsPinPath("/services/tomography/data/" + id)
-		if err != nil {
-			panic(err)
-		}
-		fmt.Println(s)
-		break
 		pt, err := tiltIdToPublishTomogram(id)
 		if err != nil {
 			fmt.Println("Unable to obtain " + id)
@@ -68,8 +63,55 @@ func main() {
 	}
 }
 
+func convertVideo(flv string, mp4 string) error {
+	bin := "ffmpeg"
+	args := []string{"-i", flv, "-movflags faststart", mp4}
+	ial := exec.Command(bin, args...)
+	out, err := ial.CombinedOutput()
+	if err != nil {
+		return err
+	}
+	fmt.Println(string(out))
+	return nil
+}
+
 func processFiles(row TiltSeries) (ipfsHash, error) {
-	return ipfsHash{}, nil
+	h := ipfsHash{}
+	s, err := ipfsPinPath("/services/tomography/data/"+row.Id, row.Id)
+	if err != nil {
+		return h, err
+	}
+	h.Data = s
+
+	km := "keymov_" + row.Id
+	if row.KeyMov > 0 && row.KeyMov <= 4 {
+		flv := "/services/tomography/data/" + row.Id + "/" + km + ".flv"
+		mp4 := "/services/tomography/data/Videos/" + km + ".mp4"
+
+		err := convertVideo(flv, mp4)
+		if err != nil {
+			return h, err
+		}
+		s, err := ipfsPinPath(mp4, km+".mp4")
+		if err != nil {
+			return h, err
+		}
+		h.KeyMov = s
+	} else {
+		h.KeyMov = "n/a"
+	}
+
+	if h.KeyMov == "n/a" {
+		h.Combined = h.Data
+	} else {
+		nh, err := ipfsAddLink(h.Data, km+".mp4", h.KeyMov)
+		if err != nil {
+			return h, err
+		}
+		h.Combined = nh
+	}
+
+	return h, nil
 }
 
 func tiltIdToPublishTomogram(tiltSeriesId string) (oip042.PublishTomogram, error) {
@@ -127,6 +169,7 @@ func tiltIdToPublishTomogram(tiltSeriesId string) (oip042.PublishTomogram, error
 			Strain:         tsr.SpeciesStrain,
 			SpeciesName:    tsr.SpeciesName,
 			ScopeName:      tsr.ScopeName,
+			Roles:          tsr.Roles,
 			Date:           tsr.Date.Unix(),
 			Emdb:           tsr.Emdb,
 			TiltSingleDual: tsr.SingleDual,
@@ -207,8 +250,8 @@ func tiltIdToPublishTomogram(tiltSeriesId string) (oip042.PublishTomogram, error
 		pt.Storage.Files = append(pt.Storage.Files, ki)
 	}
 	if tsr.KeyMov > 0 && tsr.KeyMov <= 4 {
-		kmf := "keymov_" + tsr.Id + ".flv"
-		fi, err := os.Stat("/services/tomography/data/" + tsr.Id + "/" + kmf)
+		kmf := "keymov_" + tsr.Id + ".mp4"
+		fi, err := os.Stat("/services/tomography/data/Videos/" + kmf)
 		if err != nil {
 			return pt, err
 		}

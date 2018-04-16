@@ -10,6 +10,7 @@ type TiltSeries struct {
 	Date                time.Time
 	TiltSeriesNotes     string
 	ScopeName           string
+	Roles				string
 	ScopeNotes          string
 	SpeciesName         string
 	SpeciesNotes        string

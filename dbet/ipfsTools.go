@@ -5,6 +5,9 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"os/exec"
+	"strings"
+	"fmt"
+	"errors"
 )
 
 var ipfsHashes map[string]ipfsHash
@@ -38,17 +41,26 @@ func saveIpfsHashes() error {
 	return ioutil.WriteFile("ipfsHashes.json", b, 0644)
 }
 
-func ipfsPinPath(path string) (string, error) {
+func ipfsPinPath(path string, name string) (string, error) {
 	bin := "ipfs"
 	args := []string{"add", "-r", "-p=false", "--nocopy", path}
 
 	ial := exec.Command(bin, args...)
-	out, err := ial.Output()
+	ial.Env = append(ial.Env, "IPFS_PATH=/services/tomography/.ipfs")
+	out, err := ial.CombinedOutput()
 	if err != nil {
-		return "", err
+		return string(out), err
 	}
 
-	return string(out), nil
+	lines := strings.Split(string(out), "\n")
+	last := lines[len(lines)-1]
+	words := strings.Split(last, " ")
+
+	if words[0] == "added" && words[2] == name {
+		return words[1], nil
+	} else {
+		return string(out), errors.New("ipfs hash not found")
+	}
 }
 
 func ipfsAddLink(dirHash string, name string, link string) (string, error) {
@@ -56,10 +68,13 @@ func ipfsAddLink(dirHash string, name string, link string) (string, error) {
 	args := []string{"object", "patch", "add-link", dirHash, name, link}
 
 	ial := exec.Command(bin, args...)
-	out, err := ial.Output()
+	out, err := ial.CombinedOutput()
 	if err != nil {
-		return "", err
+		return string(out), err
 	}
+
+	fmt.Println(string(out))
+	panic("hi")
 
 	return string(out), nil
 }
