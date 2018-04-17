@@ -171,14 +171,20 @@ func tiltIdToPublishTomogram(tiltSeriesId string) (oip042.PublishTomogram, error
 			Lab:            "Jensen Lab",
 			Magnification:  tsr.Magnification,
 			Defocus:        tsr.Defocus,
+			Dosage:         tsr.Dosage,
+			TiltConstant:   tsr.TiltConstant,
+			TiltMin:        tsr.TiltMin,
+			TiltMax:        tsr.TiltMax,
+			TiltStep:       tsr.TiltStep,
 			Strain:         tsr.SpeciesStrain,
 			SpeciesName:    tsr.SpeciesName,
 			ScopeName:      tsr.ScopeName,
-			Roles:          tsr.Roles,
 			Date:           tsr.Date.Unix(),
 			Emdb:           tsr.Emdb,
 			TiltSingleDual: tsr.SingleDual,
 			NBCItaxID:      tsr.SpeciesTaxId,
+			// ToDo: Needs database cleanup before publishing Roles
+			//Roles:        tsr.Roles,
 		},
 	}
 
@@ -193,6 +199,11 @@ func tiltIdToPublishTomogram(tiltSeriesId string) (oip042.PublishTomogram, error
 	}
 
 	for _, df := range tsr.DataFiles {
+		if df.Auto != 0 {
+			// ToDo: include auto caps in the publishes
+			continue
+		}
+
 		fi, err := os.Stat(df.FilePath)
 		if err != nil {
 			return pt, err

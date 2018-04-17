@@ -10,7 +10,7 @@ type TiltSeries struct {
 	Date                time.Time
 	TiltSeriesNotes     string
 	ScopeName           string
-	Roles				string
+	Roles               string
 	ScopeNotes          string
 	SpeciesName         string
 	SpeciesNotes        string
@@ -19,6 +19,11 @@ type TiltSeries struct {
 	SingleDual          int64
 	Defocus             float64
 	Magnification       float64
+	Dosage              float64
+	TiltConstant        float64
+	TiltMin             float64
+	TiltMax             float64
+	TiltStep            float64
 	SoftwareAcquisition string
 	SoftwareProcess     string
 	Emdb                string

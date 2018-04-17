@@ -74,6 +74,11 @@ type tiltSeriesRow struct {
 	SingleDual          sql.NullInt64   `db:"single_dual"`
 	Defocus             sql.NullFloat64 `db:"defocus"`
 	Magnification       sql.NullFloat64 `db:"magnification"`
+	Dosage              sql.NullFloat64 `db:"dosage"`
+	TiltConstant        sql.NullFloat64 `db:"tilt_constant"`
+	TiltMin             sql.NullFloat64 `db:"tilt_min"`
+	TiltMax             sql.NullFloat64 `db:"tilt_max"`
+	TiltStep            sql.NullFloat64 `db:"tilt_step"`
 	SoftwareAcquisition sql.NullString  `db:"software_acquisition"`
 	SoftwareProcess     sql.NullString  `db:"software_process"`
 	Emdb                sql.NullString  `db:"emdb"`
@@ -151,6 +156,21 @@ func GetTiltSeriesById(tiltSeriesId string) (ts TiltSeries, err error) {
 	}
 	if tsr.Magnification.Valid {
 		ts.Magnification = tsr.Magnification.Float64
+	}
+	if tsr.Dosage.Valid {
+		ts.Dosage = tsr.Dosage.Float64
+	}
+	if tsr.TiltConstant.Valid {
+		ts.TiltConstant = tsr.TiltConstant.Float64
+	}
+	if tsr.TiltMin.Valid {
+		ts.TiltMin = tsr.TiltMin.Float64
+	}
+	if tsr.TiltMax.Valid {
+		ts.TiltMax = tsr.TiltMax.Float64
+	}
+	if tsr.TiltStep.Valid {
+		ts.TiltStep = tsr.TiltStep.Float64
 	}
 	if tsr.SoftwareAcquisition.Valid {
 		ts.SoftwareAcquisition = tsr.SoftwareAcquisition.String
