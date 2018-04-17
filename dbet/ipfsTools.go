@@ -71,6 +71,7 @@ func ipfsAddLink(dirHash string, name string, link string) (string, error) {
 	args := []string{"object", "patch", "add-link", dirHash, name, link}
 
 	ial := exec.Command(bin, args...)
+	ial.Env = append(ial.Env, "IPFS_PATH=/services/tomography/.ipfs")
 	out, err := ial.CombinedOutput()
 	if err != nil {
 		return string(out), err
