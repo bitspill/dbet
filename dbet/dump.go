@@ -68,7 +68,7 @@ func convertVideo(flv string, mp4 string) error {
 	bin := "ffmpeg"
 	args := []string{"-i", flv, "-movflags", "faststart", "-nostats",
 		"-n", "-vcodec", "libx264", "-pix_fmt", "yuv420p", "-vf",
-		"pad=\"width=ceil(iw/2)*2:height=ceil(ih/2)*2\"", mp4}
+		"pad=width=ceil(iw/2)*2:height=ceil(ih/2)*2", mp4}
 	ial := exec.Command(bin, args...)
 	out, err := ial.CombinedOutput()
 	fmt.Println(string(out))
