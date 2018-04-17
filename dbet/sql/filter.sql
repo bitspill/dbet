@@ -12,4 +12,4 @@ SELECT t.tiltseriesID
 FROM TiltSeriesData AS t
   JOIN UserData AS u ON u.DEF_id = t.`REF|UserData|user`
   JOIN SpeciesData AS s ON s.DEF_id = t.`REF|SpeciesData|specie`
-WHERE u.fullname = 'Gregory Henderson' AND s.SpeciesName = 'Ostreococcus tauri' AND t.ispublic = 1 limit 1 offset 3;
+WHERE u.fullname = 'Gregory Henderson' AND s.SpeciesName = 'Ostreococcus tauri' AND t.ispublic = 1;

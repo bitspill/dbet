@@ -261,6 +261,19 @@ func tiltIdToPublishTomogram(tiltSeriesId string) (oip042.PublishTomogram, error
 		km := oip042.ArtifactFiles{
 			Type:    "research",
 			SubType: "keymov",
+			CType:   "video/mp4",
+			Fsize:   fi.Size(),
+			Fname:   kmf,
+		}
+		pt.Storage.Files = append(pt.Storage.Files, km)
+		kmf = "keymov_" + tsr.Id + ".flv"
+		fi, err = os.Stat("/services/tomography/data/" + tsr.Id + "/" + kmf)
+		if err != nil {
+			return pt, err
+		}
+		km = oip042.ArtifactFiles{
+			Type:    "research",
+			SubType: "keymov",
 			CType:   "video/x-flv",
 			Fsize:   fi.Size(),
 			Fname:   kmf,
