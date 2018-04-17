@@ -130,6 +130,8 @@ func tiltIdToPublishTomogram(tiltSeriesId string) (oip042.PublishTomogram, error
 		if err != nil {
 			return pt, err
 		}
+		ipfsHashes[tiltSeriesId] = hash
+		saveIpfsHashes()
 	}
 
 	ts := time.Now().Unix()
