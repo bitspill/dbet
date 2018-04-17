@@ -77,8 +77,5 @@ func ipfsAddLink(dirHash string, name string, link string) (string, error) {
 		return string(out), err
 	}
 
-	fmt.Println(string(out))
-	panic("hi")
-
-	return string(out), nil
+	return strings.TrimSpace(string(out)), nil
 }

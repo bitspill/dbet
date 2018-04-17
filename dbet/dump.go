@@ -66,7 +66,7 @@ func main() {
 func convertVideo(flv string, mp4 string) error {
 	fmt.Println("Converting " + flv + " -> " + mp4)
 	bin := "ffmpeg"
-	args := []string{"-i", flv, "-movflags", "faststart", "-nostats", "-loglevel", "panic", mp4}
+	args := []string{"-i", flv, "-movflags", "faststart", "-nostats", "-n", mp4}
 	ial := exec.Command(bin, args...)
 	out, err := ial.CombinedOutput()
 	fmt.Println(string(out))
