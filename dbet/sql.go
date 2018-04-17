@@ -188,11 +188,11 @@ func GetTiltSeriesById(tiltSeriesId string) (ts TiltSeries, err error) {
 			df.Filename = dfr.Filename.String
 			if len(strings.TrimSpace(df.Filename)) == 0 {
 				// No file name, no file...
-				break
+				continue
 			}
 		} else {
 			// No file name, no file...
-			break
+			continue
 		}
 		if dfr.Filetype.Valid {
 			df.Filetype = dfr.Filetype.String
