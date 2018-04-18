@@ -169,6 +169,7 @@ func tiltIdToPublishTomogram(tiltSeriesId string) (oip042.PublishTomogram, error
 			Microscopist:   tsr.Microscopist,
 			Institution:    "Caltech",
 			Lab:            "Jensen Lab",
+			Sid:            tsr.Id,
 			Magnification:  tsr.Magnification,
 			Defocus:        tsr.Defocus,
 			Dosage:         tsr.Dosage,
@@ -198,10 +199,22 @@ func tiltIdToPublishTomogram(tiltSeriesId string) (oip042.PublishTomogram, error
 		pt.TomogramDetails.ArtNotes += "Tilt series notes: " + tsr.TiltSeriesNotes + "\n"
 	}
 
+	capDir := ""
 	for _, df := range tsr.DataFiles {
-		if df.Auto != 0 {
-			// ToDo: include auto caps in the publishes
-			continue
+		fName := strings.TrimPrefix(df.FilePath, "/services/tomography/data/"+tsr.Id+"/")
+		if df.Auto == 2 {
+			if capDir == "" {
+				capDir, err = ipfsNewUnixFsDir()
+				if err != nil {
+					return pt, err
+				}
+			}
+			h, err := ipfsPinPath(df.FilePath, df.Filename)
+			if err != nil {
+				return pt, err
+			}
+			capDir, err = ipfsAddLink(capDir, h, df.Filename)
+			fName =  "AutoCaps/" + strings.TrimPrefix(df.FilePath, "/services/tomography/data/Caps/")
 		}
 
 		fi, err := os.Stat(df.FilePath)
@@ -214,9 +227,19 @@ func tiltIdToPublishTomogram(tiltSeriesId string) (oip042.PublishTomogram, error
 			FNotes:  df.Notes,
 			Fsize:   fi.Size(),
 			Dname:   df.Filename,
-			Fname:   strings.TrimPrefix(df.FilePath, "/services/tomography/data/"+tsr.Id+"/"),
+			Fname:   fName,
 		}
 		pt.Storage.Files = append(pt.Storage.Files, af)
+	}
+
+	if capDir != "" {
+		hash.Caps, err = ipfsAddLink(hash.Combined, "AutoCaps", capDir)
+		if err != nil {
+			return pt, err
+		}
+		pt.Storage.Location = hash.Caps
+		ipfsHashes[tsr.Id] = hash
+		saveIpfsHashes()
 	}
 
 	for _, tdf := range tsr.ThreeDFiles {

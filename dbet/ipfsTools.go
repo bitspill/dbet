@@ -13,9 +13,10 @@ import (
 var ipfsHashes map[string]ipfsHash
 
 type ipfsHash struct {
-	Data     string `json:"d"`
-	KeyMov   string `json:"k"`
-	Combined string `json:"c"`
+	Data     string `json:"d,omitempty"`
+	KeyMov   string `json:"k,omitempty"`
+	Combined string `json:"c,omitempty"`
+	Caps     string `json:"caps,omitempty"`
 }
 
 func init() {
@@ -69,6 +70,20 @@ func ipfsPinPath(path string, name string) (string, error) {
 func ipfsAddLink(dirHash string, name string, link string) (string, error) {
 	bin := "ipfs"
 	args := []string{"object", "patch", "add-link", dirHash, name, link}
+
+	ial := exec.Command(bin, args...)
+	ial.Env = append(ial.Env, "IPFS_PATH=/services/tomography/.ipfs")
+	out, err := ial.CombinedOutput()
+	if err != nil {
+		return string(out), err
+	}
+
+	return strings.TrimSpace(string(out)), nil
+}
+
+func ipfsNewUnixFsDir() (string, error) {
+	bin := "ipfs"
+	args := []string{"object", "new", "unixfs-dir"}
 
 	ial := exec.Command(bin, args...)
 	ial.Env = append(ial.Env, "IPFS_PATH=/services/tomography/.ipfs")
