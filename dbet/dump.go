@@ -139,20 +139,12 @@ func tiltIdToPublishTomogram(tiltSeriesId string) (oip042.PublishTomogram, error
 	ts := time.Now().Unix()
 	floAddress := config.FloAddress
 
-	v := []string{hash.Combined, floAddress, strconv.FormatInt(ts, 10)}
-	preImage := strings.Join(v, "-")
-	signature, err := signMessage(floAddress, preImage)
-	if err != nil {
-		return pt, err
-	}
-
 	pt = oip042.PublishTomogram{
 		PublishArtifact: oip042.PublishArtifact{
 			Type:       "research",
 			SubType:    "tomogram",
 			Timestamp:  ts,
 			FloAddress: floAddress,
-			Signature:  signature,
 			Info: &oip042.ArtifactInfo{
 				Title:       tsr.Title,
 				Description: "Auto imported from etdb",
@@ -319,6 +311,19 @@ func tiltIdToPublishTomogram(tiltSeriesId string) (oip042.PublishTomogram, error
 		}
 		pt.Storage.Files = append(pt.Storage.Files, km)
 	}
+
+	loc := hash.Combined
+	if capDir != "" {
+		loc = hash.Caps
+	}
+	v := []string{loc, floAddress, strconv.FormatInt(ts, 10)}
+	preImage := strings.Join(v, "-")
+	signature, err := signMessage(floAddress, preImage)
+	if err != nil {
+		return pt, err
+	}
+
+	pt.Signature = signature
 
 	return pt, nil
 }
