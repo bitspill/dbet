@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/bitspill/flojson"
 	"errors"
+	"fmt"
 )
 
 var (
@@ -13,7 +14,7 @@ var (
 )
 
 func init() {
-	id = 0
+	id = 0 // id is static at 0, for "proper" json-rpc increment with each call
 	user = config.FloConfiguration.RpcUser
 	pass = config.FloConfiguration.RpcPass
 	server = config.FloConfiguration.RpcAddress
@@ -55,14 +56,17 @@ func sendToAddress(address string, amount float64, floData string) (string, erro
 }
 
 func sendRPC(cmd flojson.Cmd) (flojson.Reply, error) {
-	reply, err := flojson.RpcSend(user, pass, server, cmd)
-	if err != nil {
-		return reply, err
+	for true {
+		reply, err := flojson.RpcSend(user, pass, server, cmd)
+		if err != nil {
+			fmt.Println(reply, err)
+			return reply, err
+		}
+		if reply.Error != nil {
+			fmt.Println(reply, err)
+			return reply, reply.Error
+		}
+		return reply, nil
 	}
-	if reply.Error != nil {
-		return reply, reply.Error
-	}
-	return reply, nil
+	panic("the above loop didn't return, something terrible has gone wrong")
 }
-
-

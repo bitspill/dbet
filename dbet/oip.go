@@ -77,7 +77,7 @@ func sendPart(part int64, of int64, reference string, data string) (string, erro
 	meta := []string{p1, p2, config.FloAddress, reference, sig}
 	floData := prefix + strings.Join(meta, ",") + suffix + data
 
-	txid, err := sendToAddress(config.FloAddress, 1, floData)
+	txid, err := sendToAddress(config.FloAddress, 100, floData)
 	if err != nil {
 		return "", err
 	}
