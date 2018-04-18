@@ -213,7 +213,10 @@ func tiltIdToPublishTomogram(tiltSeriesId string) (oip042.PublishTomogram, error
 			if err != nil {
 				return pt, err
 			}
-			capDir, err = ipfsAddLink(capDir, h, df.Filename)
+			capDir, err = ipfsAddLink(capDir, df.Filename, h)
+			if err != nil {
+				return pt, err
+			}
 			fName =  "AutoCaps/" + strings.TrimPrefix(df.FilePath, "/services/tomography/data/Caps/")
 		}
 
