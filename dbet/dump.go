@@ -257,7 +257,7 @@ func tiltIdToPublishTomogram(tiltSeriesId string) (oip042.PublishTomogram, error
 			return pt, err
 		}
 		ki = oip042.ArtifactFiles{
-			Type:    "research",
+			Type:    "tomogram",
 			SubType: "keyimg",
 			CType:   "image/jpeg",
 			Fsize:   fi.Size(),
@@ -272,7 +272,7 @@ func tiltIdToPublishTomogram(tiltSeriesId string) (oip042.PublishTomogram, error
 			return pt, err
 		}
 		km := oip042.ArtifactFiles{
-			Type:    "research",
+			Type:    "tomogram",
 			SubType: "keymov",
 			CType:   "video/mp4",
 			Fsize:   fi.Size(),
@@ -285,7 +285,7 @@ func tiltIdToPublishTomogram(tiltSeriesId string) (oip042.PublishTomogram, error
 			return pt, err
 		}
 		km = oip042.ArtifactFiles{
-			Type:    "research",
+			Type:    "tomogram",
 			SubType: "keymov",
 			CType:   "video/x-flv",
 			Fsize:   fi.Size(),
