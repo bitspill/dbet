@@ -9,6 +9,7 @@ import (
 	"errors"
 	"strings"
 	"strconv"
+	"regexp"
 )
 
 var (
@@ -78,7 +79,7 @@ type tiltSeriesRow struct {
 	TiltConstant        sql.NullFloat64 `db:"tilt_constant"`
 	TiltMin             sql.NullFloat64 `db:"tilt_min"`
 	TiltMax             sql.NullFloat64 `db:"tilt_max"`
-	TiltStep            sql.NullFloat64 `db:"tilt_step"`
+	TiltStep            sql.NullString  `db:"tilt_step"`
 	SoftwareAcquisition sql.NullString  `db:"software_acquisition"`
 	SoftwareProcess     sql.NullString  `db:"software_process"`
 	Emdb                sql.NullString  `db:"emdb"`
@@ -102,6 +103,8 @@ type threeDFileRow struct {
 	Filename sql.NullString `db:"filename"`
 	DefId    sql.NullInt64  `db:"DEF_id"`
 }
+
+var extractTiltStepRe = regexp.MustCompile(`^[0-9.]+`)
 
 func GetTiltSeriesById(tiltSeriesId string) (ts TiltSeries, err error) {
 	var tsr tiltSeriesRow
@@ -170,7 +173,8 @@ func GetTiltSeriesById(tiltSeriesId string) (ts TiltSeries, err error) {
 		ts.TiltMax = tsr.TiltMax.Float64
 	}
 	if tsr.TiltStep.Valid {
-		ts.TiltStep = tsr.TiltStep.Float64
+		tss := tsr.TiltStep.String
+		ts.TiltStep, _ = strconv.ParseFloat(extractTiltStepRe.FindString(tss), 64)
 	}
 	if tsr.SoftwareAcquisition.Valid {
 		ts.SoftwareAcquisition = tsr.SoftwareAcquisition.String
