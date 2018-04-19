@@ -16,7 +16,7 @@ func sendToBlockchain(data string) ([]string, error) {
 
 	// send as a single part
 	if l <= maxDataSize {
-		txid, err := sendToAddress(config.FloAddress, 1, data)
+		txid, err := sendToAddress(config.FloAddress, 0.1, data)
 		if err != nil {
 			return []string{}, err
 		}
@@ -77,7 +77,7 @@ func sendPart(part int64, of int64, reference string, data string) (string, erro
 	meta := []string{p1, p2, config.FloAddress, reference, sig}
 	floData := prefix + strings.Join(meta, ",") + suffix + data
 
-	txid, err := sendToAddress(config.FloAddress, 100, floData)
+	txid, err := sendToAddress(config.FloAddress, 0.1, floData)
 	if err != nil {
 		return "", err
 	}

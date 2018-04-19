@@ -4,6 +4,7 @@ import (
 	"github.com/bitspill/flojson"
 	"errors"
 	"fmt"
+	"time"
 )
 
 var (
@@ -56,6 +57,7 @@ func sendToAddress(address string, amount float64, floData string) (string, erro
 }
 
 func sendRPC(cmd flojson.Cmd) (flojson.Reply, error) {
+	t := 0
 	for true {
 		reply, err := flojson.RpcSend(user, pass, server, cmd)
 		if err != nil {
@@ -63,7 +65,16 @@ func sendRPC(cmd flojson.Cmd) (flojson.Reply, error) {
 			return reply, err
 		}
 		if reply.Error != nil {
-			fmt.Println(reply, err)
+			if reply.Error.Code == -6 && reply.Error.Message == "Insufficient funds" {
+				if t > 20 {
+					fmt.Println("It's been 10 minutes, perhaps you're really out of funds")
+					return reply, reply.Error
+				}
+				t++
+				fmt.Println("Sleeping 30s for a block to re-confirm balance")
+				time.Sleep(30 * time.Second)
+				continue
+			}
 			return reply, reply.Error
 		}
 		return reply, nil

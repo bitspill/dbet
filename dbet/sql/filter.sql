@@ -8,8 +8,17 @@
 
 
 -- Gregory Henderson’s DAS of Ostreococcus tauri
+# SELECT t.tiltseriesID
+# FROM TiltSeriesData AS t
+#   JOIN UserData AS u ON u.DEF_id = t.`REF|UserData|user`
+#   JOIN SpeciesData AS s ON s.DEF_id = t.`REF|SpeciesData|specie`
+# WHERE u.fullname = 'Gregory Henderson' AND s.SpeciesName = 'Ostreococcus tauri' AND t.ispublic = 1;
+
+
+
+-- All public tomograms
 SELECT t.tiltseriesID
 FROM TiltSeriesData AS t
   JOIN UserData AS u ON u.DEF_id = t.`REF|UserData|user`
   JOIN SpeciesData AS s ON s.DEF_id = t.`REF|SpeciesData|specie`
-WHERE u.fullname = 'Gregory Henderson' AND s.SpeciesName = 'Ostreococcus tauri' AND t.ispublic = 1;
+WHERE t.ispublic = 1;
