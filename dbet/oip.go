@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-const maxDataSize = 528
+const maxDataSize = 1040
 const maxPrefixNoRef = 200
 const maxPrefixRef = 250
 const dataChunk1 = maxDataSize - maxPrefixNoRef
