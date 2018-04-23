@@ -94,3 +94,17 @@ func ipfsNewUnixFsDir() (string, error) {
 
 	return strings.TrimSpace(string(out)), nil
 }
+
+func containsEmptyFolder(cid string) (bool, error) {
+	bin := "ipfs"
+	args := []string{"object", "links", cid}
+
+	ial := exec.Command(bin, args...)
+	ial.Env = append(ial.Env, "IPFS_PATH=/services/tomography/.ipfs")
+	out, err := ial.CombinedOutput()
+	if err != nil {
+		return false, err
+	}
+
+	return strings.Contains(string(out), "QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn"), nil
+}

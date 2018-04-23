@@ -127,7 +127,14 @@ func tiltIdToPublishTomogram(tiltSeriesId string) (oip042.PublishTomogram, error
 	var pt oip042.PublishTomogram
 
 	hash, ok := ipfsHashes[tiltSeriesId]
-	if !ok || hash.Data == "" || hash.KeyMov == "" || hash.Combined == "" {
+	emptyDir := false
+	if ok {
+		emptyDir, err = containsEmptyFolder(hash.Data)
+		if err != nil {
+			return pt, err
+		}
+	}
+	if !ok || hash.Data == "" || hash.KeyMov == "" || hash.Combined == "" || emptyDir {
 		hash, err = processFiles(tsr)
 		if err != nil {
 			return pt, err
