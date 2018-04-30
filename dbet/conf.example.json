@@ -10,6 +10,7 @@
     "floAddress": "publisherAddress",
     "rpcAddress": "localhost:7313",
     "rpcUser": "rpcUser",
-    "rpcPass": "rpcPass"
+    "rpcPass": "rpcPass",
+    "txFeePerKb": 0.001
   }
 }

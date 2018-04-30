@@ -57,6 +57,23 @@ func sendToAddress(address string, amount float64, floData string) (string, erro
 	return reply.Result.(string), nil
 }
 
+func setTxFee(floPerKb float64) (error) {
+	var satoshi = int64(floPerKb * 1e8)
+	cmd, err := flojson.NewSetTxFeeCmd(id, satoshi)
+	if err != nil {
+		return err
+	}
+
+	reply, err := sendRPC(cmd)
+	if err != nil {
+		return err
+	}
+	if reply.Error != nil {
+		return reply.Error
+	}
+	return nil
+}
+
 func sendRPC(cmd flojson.Cmd) (flojson.Reply, error) {
 	t := 0
 	for true {

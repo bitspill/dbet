@@ -15,10 +15,11 @@ type Configuration struct {
 }
 
 type FloConfiguration struct {
-	FloAddress string `json:"floAddress"`
-	RpcAddress string `json:"rpcAddress"`
-	RpcUser    string `json:"rpcUser"`
-	RpcPass    string `json:"rpcPass"`
+	FloAddress string  `json:"floAddress"`
+	RpcAddress string  `json:"rpcAddress"`
+	RpcUser    string  `json:"rpcUser"`
+	RpcPass    string  `json:"rpcPass"`
+	TxFeePerKb float64 `json:"txFeePerKb"`
 }
 
 type DatabaseConfiguration struct {

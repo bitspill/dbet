@@ -14,6 +14,11 @@ const dataChunkX = maxDataSize - maxPrefixRef
 func sendToBlockchain(data string) ([]string, error) {
 	l := len(data)
 
+	err := setTxFee(config.TxFeePerKb)
+	if err != nil {
+		return []string{}, nil
+	}
+
 	// send as a single part
 	if l <= maxDataSize {
 		txid, err := sendToAddress(config.FloAddress, 0.1, data)
@@ -41,7 +46,7 @@ func sendToBlockchain(data string) ([]string, error) {
 	for i++; i <= chunkCount; i++ {
 		// if the last chunk don't out-of-bounds
 		c := dataChunkX
-		if c > len(remainder){
+		if c > len(remainder) {
 			c = len(remainder)
 		}
 		// slice off a chunk to send
