@@ -182,7 +182,7 @@ func tiltIdToPublishTomogram(tiltSeriesId string) (oip042.PublishTomogram, error
 			Date:           tsr.Date.Unix(),
 			Emdb:           tsr.Emdb,
 			TiltSingleDual: tsr.SingleDual,
-			NBCItaxID:      tsr.SpeciesTaxId,
+			NCBItaxID:      tsr.SpeciesTaxId,
 			// ToDo: Needs database cleanup before publishing Roles
 			//Roles:        tsr.Roles,
 		},
