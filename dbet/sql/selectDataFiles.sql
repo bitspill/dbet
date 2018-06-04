@@ -6,4 +6,4 @@ SELECT
   df.TXT_notes,
   df.auto,
   df.`REF|ThreeDFile|image` as ThreeDFileImage
-FROM DataFile as df  where `REF|TiltSeriesData|tiltseries` = ?;
+FROM DataFile as df  where `REF|TiltSeriesData|tiltseries` = ? and df.status = 0;

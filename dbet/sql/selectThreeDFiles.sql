@@ -5,4 +5,4 @@ SELECT
   tdf.filename,
   tdf.DEF_id
 FROM ThreeDFile as tdf
-WHERE tdf.`REF|TiltSeriesData|tiltseries` = ?;
+WHERE tdf.`REF|TiltSeriesData|tiltseries` = ? and tdf.status = 0;
